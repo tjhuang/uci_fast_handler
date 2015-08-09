@@ -1,0 +1,17 @@
+config 'friend' 'Allen'
+	option 'firstname' 'Allen'
+	option 'lastname' 'Knuth'
+	option 'birth' '1982/09/02'
+	option 'phone' '+886-923-234-668'
+
+config 'friend' 'Ben'
+	option 'firstname' 'Ben'
+	option 'lastname' 'Geller'
+	option 'birth' '1975/08/01'
+	option 'phone' '+886-933-004-655'
+
+config 'friend' 'Joey'
+	option 'firstname' 'Joey'
+	option 'lastname' 'Tribbiani'
+	option 'birth' '1976/02/03'
+	option 'phone' '+886-955-884-885'
