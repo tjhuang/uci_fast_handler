@@ -51,27 +51,26 @@ static char *lc_uci_get(const char *str)
 void help(void)
 {
 	printf("Usage:\n");
-	printf("  show <CMD_FILE>\n");
+	printf("  show [config_dir]\n");
 }
 
 int main(int argc, char *argv[])
 {
-	char query_buff[256];
-	FILE *fp;
+	char query_buff[256] = {0};
+	char config_dir[128] = {0};
 	char *s;
 
-/*
-	fp = fopen(argv[1], "r");
-	if (!fp)
+	if (argc >= 2)
 	{
-		printf("Can not open file!\n");
-		return -1;
+		sprintf(config_dir, "%s", argv[1]);
 	}
-*/
 
 	ctx = uci_alloc_context();
 
-	int result = uci_set_confdir(ctx, "/home/jacob/Downloads/uci_fast_handler/test");
+	if (strlen(config_dir) != 0)
+	{
+		uci_set_confdir(ctx, config_dir);
+	}
 
 	sprintf(query_buff, "phonebook.Ben.phone");
 	s = lc_uci_get(query_buff);
@@ -79,45 +78,16 @@ int main(int argc, char *argv[])
 	{
 		printf("Get Ben's phone: %s\n", s);
 	}
-/*
-	while (fgets(line, 128, fp) != NULL)
+
+	sprintf(query_buff, "phonebook.Ben.phone=%s", "+886-123-456-789");
+	lc_uci_set(query_buff);
+
+	sprintf(query_buff, "phonebook.Ben.phone");
+	s = lc_uci_get(query_buff);
+	if (s)
 	{
-		int result;
-		char type[8];
-		char mac[32];
-		char cmd3[32];
-		char cmd4[32];
-		char cmd5[32];
-		char cmd6[32];
-
-		result = sscanf(line, "%s %s %s %s %s %s", type, mac, cmd3, cmd4, cmd5, cmd6);
-		format_mac_address(mac);
-		if (result == 3 && strcmp(type, "grp") == 0)
-		{
-			char query_buff[256];
-			char *s;
-			sprintf(query_buff, "apg_dev.%s_%s.grp", mac, type);
-			s = lc_uci_get(query_buff);
-			if (s == NULL)
-			{
-				sprintf(query_buff, "apg_dev.%s_%s=section", mac, type);
-				lc_uci_set(query_buff);
-
-				sprintf(query_buff, "apg_dev.%s_%s.grp=-", mac, type);
-				lc_uci_set(query_buff);
-
-				sprintf(query_buff, "apg_dev.%s_%s.time=%d:%d,%d:%d,%d:%d,%d:%d,%d:%d,%d:%d,%d:%d", mac, type,
-					TIME_MAX, TIME_MAX, TIME_MAX, TIME_MAX, TIME_MAX, TIME_MAX, TIME_MAX,
-					TIME_MAX, TIME_MAX, TIME_MAX, TIME_MAX, TIME_MAX, TIME_MAX, TIME_MAX);
-				lc_uci_set(query_buff);
-			}
-
-			sprintf(query_buff, "apg_dev.%s_%s.grp=%s", mac, type, cmd3);
-			lc_uci_set(query_buff);
-		}
+		printf("Ben's phone number is changed into: %s\n", s);
 	}
-*/
-//	fclose(fp);
 
 	uci_commit(ctx, &ptr.p, false);
 
